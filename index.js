@@ -89,7 +89,7 @@ async function run() {
       const options = { upsert: true };
       const updatedStatus = {
         $set: {
-          status,
+          status: status.status,
         },
       };
       const result = await ordersCollection.updateOne(
