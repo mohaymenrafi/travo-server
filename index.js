@@ -59,6 +59,7 @@ async function run() {
         const newResult = result.filter((odr) => odr.email === userEmail);
         res.send(newResult);
       } else {
+        console.log('working');
         res.send(result);
       }
     });
@@ -76,7 +77,27 @@ async function run() {
       console.log(id);
       const query = { _id: ObjectId(id) };
       const result = await ordersCollection.deleteOne(query);
+      console.log(result);
       res.send(result);
+    });
+
+    // update status
+    app.put('/orders/:id', async (req, res) => {
+      const { id } = req.params;
+      const status = req.body;
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updatedStatus = {
+        $set: {
+          status,
+        },
+      };
+      const result = await ordersCollection.updateOne(
+        filter,
+        updatedStatus,
+        options
+      );
+      res.json(result);
     });
   } finally {
     // await client.close();
